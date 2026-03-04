@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCX (NSE 8) İleri Seviye Çalışma Portalı v2</title>
+    <title>FCX (NSE 8) Advanced Study Portal v2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -36,16 +36,26 @@
                         <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
                             FCX <span class="text-red-500">v2</span>
                         </h1>
-                        <p class="text-xs font-medium text-slate-400">NSE 7 to FCX Transition Portal - Document Referenced</p>
+                        <p class="text-xs font-medium text-slate-400" data-i18n="subtitle">NSE 7'den FCX'e Geçiş Portalı - Referanslı Doküman</p>
                     </div>
                 </div>
-                <div class="bg-slate-800 px-5 py-3 rounded-xl border border-slate-700 w-full md:w-72">
-                    <div class="flex justify-between items-end mb-2">
-                        <span class="text-xs uppercase font-bold text-slate-400">Mastery Progress</span>
-                        <span id="progressText" class="text-sm font-bold text-emerald-400 font-code">0%</span>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                    <!-- Language Toggle -->
+                    <div class="bg-slate-800 p-1 rounded-lg border border-slate-700 flex shrink-0 shadow-inner">
+                        <button onclick="setLanguage('tr')" id="btn-tr" class="px-4 py-1.5 rounded text-sm font-bold bg-slate-700 text-white transition-colors focus:outline-none">TR</button>
+                        <button onclick="setLanguage('en')" id="btn-en" class="px-4 py-1.5 rounded text-sm font-bold text-slate-400 hover:text-white transition-colors focus:outline-none">EN</button>
                     </div>
-                    <div class="w-full bg-slate-950 rounded-full h-2">
-                        <div id="mainProgress" class="bg-gradient-to-r from-red-600 to-emerald-500 h-2 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(16,185,129,0.4)]" style="width: 0%"></div>
+
+                    <!-- Progress Bar -->
+                    <div class="bg-slate-800 px-5 py-3 rounded-xl border border-slate-700 w-full sm:w-72">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xs uppercase font-bold text-slate-400" data-i18n="masteryProgress">Uzmanlık İlerlemesi</span>
+                            <span id="progressText" class="text-sm font-bold text-emerald-400 font-code">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-950 rounded-full h-2">
+                            <div id="mainProgress" class="bg-gradient-to-r from-red-600 to-emerald-500 h-2 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(16,185,129,0.4)]" style="width: 0%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -56,26 +66,26 @@
         
         <!-- Navigation Tabs -->
         <div class="flex overflow-x-auto gap-2 mb-6 border-b border-slate-800 pb-px scrollbar-hide">
-            <button onclick="showTab('schedule')" class="tab-btn active relative flex items-center gap-2 px-6 py-3 font-semibold text-white bg-slate-800 border-t border-l border-r border-slate-700 rounded-t-lg z-10 -mb-[1px]">
-                <i data-lucide="git-branch" class="w-4 h-4 text-red-400"></i> Referenced Study Plan
+            <button onclick="showTab('schedule')" class="tab-btn active relative flex items-center gap-2 px-6 py-3 font-semibold text-white bg-slate-800 border-t border-l border-r border-slate-700 rounded-t-lg z-10 -mb-[1px] whitespace-nowrap">
+                <i data-lucide="git-branch" class="w-4 h-4 text-red-400"></i> <span data-i18n="tabSchedule">Referanslı Çalışma Planı</span>
             </button>
-            <button onclick="showTab('nse7-gap')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent">
-                <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i> NSE 7 -> FCX Gap Analysis
+            <button onclick="showTab('nse7-gap')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent whitespace-nowrap">
+                <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i> <span data-i18n="tabGap">NSE 7 -> FCX Boşluk Analizi</span>
             </button>
-            <button onclick="showTab('debug-cheatsheet')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent">
-                <i data-lucide="stethoscope" class="w-4 h-4 text-emerald-400"></i> Deep Debug Cheatsheet
+            <button onclick="showTab('debug-cheatsheet')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent whitespace-nowrap">
+                <i data-lucide="stethoscope" class="w-4 h-4 text-emerald-400"></i> <span data-i18n="tabDebug">Derin Debug Hile Kağıdı</span>
             </button>
         </div>
 
         <!-- Tab: Referenced Schedule -->
         <div id="schedule" class="tab-content active">
             <div class="bg-slate-800/50 rounded-xl border border-slate-700 p-6 mb-6 backdrop-blur-sm">
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                     <div>
-                        <h2 class="text-xl font-bold flex items-center gap-2 text-white"><i data-lucide="book-open-check" class="text-red-500"></i> FCX Master Lab Curriculum</h2>
-                        <p class="text-slate-400 text-sm mt-1">Tüm görevler FortiOS 7.2/7.4 Admin Guide ve Troubleshooting KB'lerine referanslanmıştır.</p>
+                        <h2 class="text-xl font-bold flex items-center gap-2 text-white"><i data-lucide="book-open-check" class="text-red-500"></i> <span data-i18n="curriculumTitle">FCX Master Lab Müfredatı</span></h2>
+                        <p class="text-slate-400 text-sm mt-1" data-i18n="curriculumDesc">Tüm görevler FortiOS 7.2/7.4 Admin Guide ve Troubleshooting KB'lerine referanslanmıştır.</p>
                     </div>
-                    <button onclick="expandAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded transition">Tümünü Aç/Kapat</button>
+                    <button onclick="expandAll()" class="text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition whitespace-nowrap border border-slate-600 shadow" data-i18n="btnExpandAll">Tümünü Aç/Kapat</button>
                 </div>
                 
                 <div id="accordionContainer" class="space-y-3">
@@ -88,21 +98,21 @@
         <div id="nse7-gap" class="tab-content">
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
-                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="shield-alert" class="text-yellow-500"></i> NSE 7 Olarak Zaten Bildikleriniz (Zaman Harcamayın)</h3>
+                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="shield-alert" class="text-yellow-500"></i> <span data-i18n="gapTitle1">NSE 7 Olarak Zaten Bildikleriniz (Zaman Harcamayın)</span></h3>
                     <ul class="space-y-3 text-sm text-slate-300">
-                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Temel Firewall Policy ve NAT kuralları.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Basit OSPF komşulukları ve statik routing.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> SD-WAN temel kuralları (Volume/Session tabanlı yük dengeleme).</li>
-                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Security Profile'ların (AV, Web Filter, IPS) standart kullanımı.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> <span data-i18n="gap1_1">Temel Firewall Policy ve NAT kuralları.</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> <span data-i18n="gap1_2">Basit OSPF komşulukları ve statik routing.</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> <span data-i18n="gap1_3">SD-WAN temel kuralları (Volume/Session tabanlı yük dengeleme).</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> <span data-i18n="gap1_4">Security Profile'ların (AV, Web Filter, IPS) standart kullanımı.</span></li>
                     </ul>
                 </div>
                 <div class="bg-gradient-to-br from-red-900/40 to-slate-900 p-6 rounded-xl border border-red-900/50 shadow-inner">
-                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="target" class="text-red-500"></i> FCX İçin Odaklanmanız Gereken "Gap" (Eksik) Alanlar</h3>
+                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="target" class="text-red-500"></i> <span data-i18n="gapTitle2">FCX İçin Odaklanmanız Gereken "Gap" (Eksik) Alanlar</span></h3>
                     <ul class="space-y-3 text-sm text-slate-200">
-                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>ADVPN + BGP Route Reflector:</strong> SD-WAN SLA'lerinin BGP rotalarıyla dinamik olarak nasıl konuştuğu. (Overlay routing).</li>
-                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>FMG Provisioning:</strong> CLI scriptlerini meta-variable'lar ile FortiManager üzerinden yüzlerce cihaza hatasız basmak.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>ZTNA & EMS Entegrasyonu:</strong> SAML IDP kimlik doğrulaması ile Access Proxy üzerinden HTTPS/TCP trafiğini yönetmek.</li>
-                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>Kasıtlı Hatalar:</strong> Sınavda size MTU mismatch olan, asimetrik route edilmiş tüneller verilecek. GUI'den anlamanız imkansızdır, debug flow şarttır.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <span data-i18n="gap2_1"><strong>ADVPN + BGP Route Reflector:</strong> SD-WAN SLA'lerinin BGP rotalarıyla dinamik olarak nasıl konuştuğu. (Overlay routing).</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <span data-i18n="gap2_2"><strong>FMG Provisioning:</strong> CLI scriptlerini meta-variable'lar ile FortiManager üzerinden yüzlerce cihaza hatasız basmak.</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <span data-i18n="gap2_3"><strong>ZTNA & EMS Entegrasyonu:</strong> SAML IDP kimlik doğrulaması ile Access Proxy üzerinden HTTPS/TCP trafiğini yönetmek.</span></li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <span data-i18n="gap2_4"><strong>Kasıtlı Hatalar:</strong> Sınavda size MTU mismatch olan, asimetrik route edilmiş tüneller verilecek. GUI'den anlamanız imkansızdır, debug flow şarttır.</span></li>
                     </ul>
                 </div>
             </div>
@@ -112,52 +122,46 @@
         <div id="debug-cheatsheet" class="tab-content">
             <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden shadow-2xl">
                 <div class="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center">
-                    <h3 class="text-white font-bold flex items-center gap-2"><i data-lucide="terminal" class="text-emerald-400"></i> FCX Survival CLI Commands</h3>
-                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded border border-red-500/30">Notepad'e Kopyala</span>
+                    <h3 class="text-white font-bold flex items-center gap-2"><i data-lucide="terminal" class="text-emerald-400"></i> <span data-i18n="debugTitle">FCX Survival CLI Commands</span></h3>
+                    <span class="text-xs font-semibold bg-red-500/20 text-red-400 px-2 py-1 rounded border border-red-500/30" data-i18n="debugCopy">Notepad'e Kopyala</span>
                 </div>
                 <div class="p-6 space-y-6">
                     <!-- Flow Trace -->
                     <div>
-                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">1. Asimetrik Routing & Drop Tespiti (Life of a Packet)</h4>
-                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-green-400 overflow-x-auto border border-slate-700">
-<span class="text-slate-500"># Her zaman filtre ile başlayın, yoksa CPU tavan yapar.</span>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1" data-i18n="debug1Title">1. Asimetrik Routing & Drop Tespiti (Life of a Packet)</h4>
+                        <pre class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-green-400 overflow-x-auto border border-slate-700" data-i18n="debug1Code"><span class="text-slate-500"># Her zaman filtre ile başlayın, yoksa CPU tavan yapar.</span>
 diag debug flow filter addr x.x.x.x
 diag debug flow filter protocol 1 <span class="text-slate-500"># ICMP</span>
 diag debug flow show function-name enable <span class="text-slate-500"># Kernel fonksiyonunu gösterir (Çok kritik!)</span>
 diag debug flow trace start 100
 diag debug enable
 <span class="text-slate-500"># İşi bitince:</span>
-diag debug disable & diag debug flow trace stop & diag debug flow filter clear
-                        </div>
+diag debug disable & diag debug flow trace stop & diag debug flow filter clear</pre>
                     </div>
                     
                     <!-- IKE & IPsec -->
                     <div>
-                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">2. IPsec VPN Neden Kalkmıyor?</h4>
-                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-blue-400 overflow-x-auto border border-slate-700">
-<span class="text-slate-500"># GUI 'Negotiation Timeout' der ama gerçeği CLI söyler (Örn: Peer ID mismatch, Proposal mismatch).</span>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1" data-i18n="debug2Title">2. IPsec VPN Neden Kalkmıyor?</h4>
+                        <pre class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-blue-400 overflow-x-auto border border-slate-700" data-i18n="debug2Code"><span class="text-slate-500"># GUI 'Negotiation Timeout' der ama gerçeği CLI söyler (Örn: Peer ID mismatch, Proposal mismatch).</span>
 diag vpn ike log-filter clear
 diag vpn ike log-filter dst-addr4 x.x.x.x
 diag debug app ike -1
 diag debug enable
 <span class="text-slate-500"># Tünel faz 2 durumunu kernel seviyesinde görme:</span>
-diag vpn tunnel list name TUNNEL_NAME
-                        </div>
+diag vpn tunnel list name TUNNEL_NAME</pre>
                     </div>
 
                     <!-- BGP -->
                     <div>
-                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">3. BGP Komşuluk ve Route İncelemesi</h4>
-                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-yellow-400 overflow-x-auto border border-slate-700">
-<span class="text-slate-500"># Komşuluk var ama route neden RIB'e inmedi?</span>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1" data-i18n="debug3Title">3. BGP Komşuluk ve Route İncelemesi</h4>
+                        <pre class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-yellow-400 overflow-x-auto border border-slate-700" data-i18n="debug3Code"><span class="text-slate-500"># Komşuluk var ama route neden RIB'e inmedi?</span>
 get router info bgp summary
 get router info bgp neighbors x.x.x.x advertised-routes
 get router info bgp neighbors x.x.x.x received-routes
 <span class="text-slate-500"># BGP paket debug (Update'leri izlemek için):</span>
 diag ip router bgp all enable
 diag ip router bgp level info
-diag debug enable
-                        </div>
+diag debug enable</pre>
                     </div>
                 </div>
             </div>
@@ -166,135 +170,296 @@ diag debug enable
     </main>
 
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+        // Language Static Dictionary
+        const i18n = {
+            tr: {
+                subtitle: "NSE 7'den FCX'e Geçiş Portalı - Referanslı Doküman",
+                masteryProgress: "Uzmanlık İlerlemesi",
+                tabSchedule: "Referanslı Çalışma Planı",
+                tabGap: "NSE 7 -> FCX Boşluk Analizi",
+                tabDebug: "Derin Debug Hile Kağıdı",
+                curriculumTitle: "FCX Master Lab Müfredatı",
+                curriculumDesc: "Tüm görevler FortiOS 7.2/7.4 Admin Guide ve Troubleshooting KB'lerine referanslanmıştır.",
+                btnExpandAll: "Tümünü Aç/Kapat",
+                gapTitle1: "NSE 7 Olarak Zaten Bildikleriniz (Zaman Harcamayın)",
+                gap1_1: "Temel Firewall Policy ve NAT kuralları.",
+                gap1_2: "Basit OSPF komşulukları ve statik routing.",
+                gap1_3: "SD-WAN temel kuralları (Volume/Session tabanlı yük dengeleme).",
+                gap1_4: "Security Profile'ların (AV, Web Filter, IPS) standart kullanımı.",
+                gapTitle2: "FCX İçin Odaklanmanız Gereken \"Gap\" (Eksik) Alanlar",
+                gap2_1: "<strong>ADVPN + BGP Route Reflector:</strong> SD-WAN SLA'lerinin BGP rotalarıyla dinamik olarak nasıl konuştuğu. (Overlay routing).",
+                gap2_2: "<strong>FMG Provisioning:</strong> CLI scriptlerini meta-variable'lar ile FortiManager üzerinden yüzlerce cihaza hatasız basmak.",
+                gap2_3: "<strong>ZTNA & EMS Entegrasyonu:</strong> SAML IDP kimlik doğrulaması ile Access Proxy üzerinden HTTPS/TCP trafiğini yönetmek.",
+                gap2_4: "<strong>Kasıtlı Hatalar:</strong> Sınavda size MTU mismatch olan, asimetrik route edilmiş tüneller verilecek. GUI'den anlamanız imkansızdır, debug flow şarttır.",
+                debugTitle: "FCX Survival CLI Commands",
+                debugCopy: "Notepad'e Kopyala",
+                debug1Title: "1. Asimetrik Routing & Drop Tespiti (Life of a Packet)",
+                debug1Code: `<span class="text-slate-500"># Her zaman filtre ile başlayın, yoksa CPU tavan yapar.</span>\ndiag debug flow filter addr x.x.x.x\ndiag debug flow filter protocol 1 <span class="text-slate-500"># ICMP</span>\ndiag debug flow show function-name enable <span class="text-slate-500"># Kernel fonksiyonunu gösterir (Çok kritik!)</span>\ndiag debug flow trace start 100\ndiag debug enable\n<span class="text-slate-500"># İşi bitince:</span>\ndiag debug disable & diag debug flow trace stop & diag debug flow filter clear`,
+                debug2Title: "2. IPsec VPN Neden Kalkmıyor?",
+                debug2Code: `<span class="text-slate-500"># GUI 'Negotiation Timeout' der ama gerçeği CLI söyler (Örn: Peer ID mismatch, Proposal mismatch).</span>\ndiag vpn ike log-filter clear\ndiag vpn ike log-filter dst-addr4 x.x.x.x\ndiag debug app ike -1\ndiag debug enable\n<span class="text-slate-500"># Tünel faz 2 durumunu kernel seviyesinde görme:</span>\ndiag vpn tunnel list name TUNNEL_NAME`,
+                debug3Title: "3. BGP Komşuluk ve Route İncelemesi",
+                debug3Code: `<span class="text-slate-500"># Komşuluk var ama route neden RIB'e inmedi?</span>\nget router info bgp summary\nget router info bgp neighbors x.x.x.x advertised-routes\nget router info bgp neighbors x.x.x.x received-routes\n<span class="text-slate-500"># BGP paket debug (Update'leri izlemek için):</span>\ndiag ip router bgp all enable\ndiag ip router bgp level info\ndiag debug enable`
+            },
+            en: {
+                subtitle: "NSE 7 to FCX Transition Portal - Document Referenced",
+                masteryProgress: "Mastery Progress",
+                tabSchedule: "Referenced Study Plan",
+                tabGap: "NSE 7 -> FCX Gap Analysis",
+                tabDebug: "Deep Debug Cheatsheet",
+                curriculumTitle: "FCX Master Lab Curriculum",
+                curriculumDesc: "All tasks are referenced to the FortiOS 7.2/7.4 Admin Guide and Troubleshooting KBs.",
+                btnExpandAll: "Expand / Collapse All",
+                gapTitle1: "What You Already Know as an NSE 7 (Do Not Spend Time Here)",
+                gap1_1: "Basic Firewall Policy and NAT rules.",
+                gap1_2: "Simple OSPF adjacencies and static routing.",
+                gap1_3: "SD-WAN basic rules (Volume/Session-based load balancing).",
+                gap1_4: "Standard use of Security Profiles (AV, Web Filter, IPS).",
+                gapTitle2: "\"Gap\" Areas to Focus on for the FCX Exam",
+                gap2_1: "<strong>ADVPN + BGP Route Reflector:</strong> Understanding how SD-WAN SLAs interact dynamically with BGP routes (Overlay routing).",
+                gap2_2: "<strong>FMG Provisioning:</strong> Deploying CLI scripts flawlessly to hundreds of devices using meta-variables via FortiManager.",
+                gap2_3: "<strong>ZTNA & EMS Integration:</strong> Managing HTTPS/TCP traffic through Access Proxy using SAML IDP authentication.",
+                gap2_4: "<strong>Intentional Faults:</strong> The exam will present scenarios like MTU mismatches or asymmetrically routed tunnels. Relying on the GUI is impossible; mastering debug flow is mandatory.",
+                debugTitle: "FCX Survival CLI Commands",
+                debugCopy: "Copy to Notepad",
+                debug1Title: "1. Asymmetric Routing & Drop Detection (Life of a Packet)",
+                debug1Code: `<span class="text-slate-500"># Always start with a filter to avoid high CPU usage.</span>\ndiag debug flow filter addr x.x.x.x\ndiag debug flow filter protocol 1 <span class="text-slate-500"># ICMP</span>\ndiag debug flow show function-name enable <span class="text-slate-500"># Shows the kernel function (Very critical!)</span>\ndiag debug flow trace start 100\ndiag debug enable\n<span class="text-slate-500"># When finished:</span>\ndiag debug disable & diag debug flow trace stop & diag debug flow filter clear`,
+                debug2Title: "2. Why is the IPsec VPN not coming up?",
+                debug2Code: `<span class="text-slate-500"># The GUI might say 'Negotiation Timeout', but the CLI tells the truth (e.g., Peer ID mismatch, Proposal mismatch).</span>\ndiag vpn ike log-filter clear\ndiag vpn ike log-filter dst-addr4 x.x.x.x\ndiag debug app ike -1\ndiag debug enable\n<span class="text-slate-500"># To see the Phase 2 tunnel status at the kernel level:</span>\ndiag vpn tunnel list name TUNNEL_NAME`,
+                debug3Title: "3. BGP Adjacency and Route Inspection",
+                debug3Code: `<span class="text-slate-500"># The adjacency is up, but why isn't the route installed in the RIB?</span>\nget router info bgp summary\nget router info bgp neighbors x.x.x.x advertised-routes\nget router info bgp neighbors x.x.x.x received-routes\n<span class="text-slate-500"># BGP packet debug (To monitor updates):</span>\ndiag ip router bgp all enable\ndiag ip router bgp level info\ndiag debug enable`
+            }
+        };
 
-        // Data Structure with Fortinet Documentation Links
-        const detailedProgramData = [
+        // Data Structures for both languages
+        const detailedProgramDataTR = [
             {
                 phase: "1. Çekirdek Güvenlik ve Donanım Mimari (Hafta 1-3)",
                 weeks: [
-                    { 
-                        week: "Hafta 1", 
-                        title: "NP6/NP7 Fast Path & VDOM Mimarisi", 
-                        tasks: [
-                            { text: "Hardware Acceleration (NP6/NP7) session offload analizi.", doc: "Life of a Packet", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/parallel-path-processing-life-of-a-packet/86811/packet-flow-ingress-and-egress-fortigates-without-network-processor-offloading" },
-                            { text: "Inter-VDOM routing ve VDOM Link asimetrik yönlendirme pratikleri.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/96338/virtual-domains" },
-                            { text: "EMAC VLAN konfigürasyonları (Aynı fiziksel portta birden fazla MAC/VDOM).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/50170/transparent-mode" }
-                        ] 
-                    },
-                    { 
-                        week: "Hafta 2-3", 
-                        title: "HA (FGCP/FGSP) İleri Konfigürasyon", 
-                        tasks: [
-                            { text: "FGCP A-P kurulumu, Session Sync (sesync) TCP/UDP timeout ayarları.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/460456/high-availability" },
-                            { text: "FGSP (Standalone Session Sync) ile L3 asimetrik ortam tasarımı.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/653246/fortigate-session-life-support-protocol-fgsp" },
-                            { text: "HA Checksum mismatch hatası giderme (diag sys ha checksum recalculate).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-HA-synchronization-issue-cluster-out-of/ta-p/192233" }
-                        ] 
-                    }
+                    { week: "Hafta 1", title: "NP6/NP7 Fast Path & VDOM Mimarisi", tasks: [
+                        { text: "Hardware Acceleration (NP6/NP7) session offload analizi.", doc: "Life of a Packet", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/parallel-path-processing-life-of-a-packet/86811/packet-flow-ingress-and-egress-fortigates-without-network-processor-offloading" },
+                        { text: "Inter-VDOM routing ve VDOM Link asimetrik yönlendirme pratikleri.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/96338/virtual-domains" },
+                        { text: "EMAC VLAN konfigürasyonları (Aynı fiziksel portta birden fazla MAC/VDOM).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/50170/transparent-mode" }
+                    ]},
+                    { week: "Hafta 2-3", title: "HA (FGCP/FGSP) İleri Konfigürasyon", tasks: [
+                        { text: "FGCP A-P kurulumu, Session Sync (sesync) TCP/UDP timeout ayarları.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/460456/high-availability" },
+                        { text: "FGSP (Standalone Session Sync) ile L3 asimetrik ortam tasarımı.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/653246/fortigate-session-life-support-protocol-fgsp" },
+                        { text: "HA Checksum mismatch hatası giderme (diag sys ha checksum recalculate).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-HA-synchronization-issue-cluster-out-of/ta-p/192233" }
+                    ]}
                 ]
             },
             {
                 phase: "2. SD-WAN, ADVPN ve İleri Yönlendirme (Hafta 4-8)",
                 weeks: [
-                    { 
-                        week: "Hafta 4-5", 
-                        title: "OSPF & BGP Routing Mimarileri", 
-                        tasks: [
-                            { text: "BGP Route Reflector (RR) ve Route-Map ile özellik (attribute) manipülasyonu.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/765355/routing" },
-                            { text: "OSPF over IPsec MTU sorunları tespiti (diag sniffer / fnsysctl ifconfig).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-OSPF-stuck-in-EXSTART-due-to-MTU-mismatch/ta-p/192241" },
-                            { text: "Bidirectional Forwarding Detection (BFD) ile BGP/OSPF failover hızlandırma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/661841/bfd" }
-                        ] 
-                    },
-                    { 
-                        week: "Hafta 6-8", 
-                        title: "Secure SD-WAN & ADVPN (Sınavın Kalbi)", 
-                        tasks: [
-                            { text: "IKEv2 ADVPN Phase 1/Phase 2 shortcut tünel yapılandırması.", doc: "Architecture", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/sd-wan-architecture-for-enterprise/468641/advpn" },
-                            { text: "SD-WAN Rules, SLA hedefleri ve BGP overlay rotalarının entegrasyonu.", doc: "SD-WAN Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/95304/sd-wan" },
-                            { text: "SD-WAN Zone ve tünel interface routing bağımlılıklarını troubleshoot etme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-SD-WAN-Rule-not-matching/ta-p/192661" }
-                        ] 
-                    }
+                    { week: "Hafta 4-5", title: "OSPF & BGP Routing Mimarileri", tasks: [
+                        { text: "BGP Route Reflector (RR) ve Route-Map ile özellik (attribute) manipülasyonu.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/765355/routing" },
+                        { text: "OSPF over IPsec MTU sorunları tespiti (diag sniffer / fnsysctl ifconfig).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-OSPF-stuck-in-EXSTART-due-to-MTU-mismatch/ta-p/192241" },
+                        { text: "Bidirectional Forwarding Detection (BFD) ile BGP/OSPF failover hızlandırma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/661841/bfd" }
+                    ]},
+                    { week: "Hafta 6-8", title: "Secure SD-WAN & ADVPN (Sınavın Kalbi)", tasks: [
+                        { text: "IKEv2 ADVPN Phase 1/Phase 2 shortcut tünel yapılandırması.", doc: "Architecture", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/sd-wan-architecture-for-enterprise/468641/advpn" },
+                        { text: "SD-WAN Rules, SLA hedefleri ve BGP overlay rotalarının entegrasyonu.", doc: "SD-WAN Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/95304/sd-wan" },
+                        { text: "SD-WAN Zone ve tünel interface routing bağımlılıklarını troubleshoot etme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-SD-WAN-Rule-not-matching/ta-p/192661" }
+                    ]}
                 ]
             },
             {
                 phase: "3. FMG/FAZ Merkezi Yönetim ve Otomasyon (Hafta 9-13)",
                 weeks: [
-                    { 
-                        week: "Hafta 9-11", 
-                        title: "FortiManager (FMG) Operasyonları", 
-                        tasks: [
-                            { text: "Policy Package, ADOM yapılandırması ve Global Policy konsepti.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/339178/policy-and-objects" },
-                            { text: "Meta-Variables kullanarak dinamik IPsec/BGP Provisioning şablonları oluşturma.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/765355/provisioning-templates" },
-                            { text: "Install/Push hatalarını (Copy fail, Verification fail) diagnose loglarından bulma.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiManager/Troubleshooting-Tip-Install-fails-with-verification-error/ta-p/192245" }
-                        ] 
-                    },
-                    { 
-                        week: "Hafta 12-13", 
-                        title: "Security Fabric & FortiAnalyzer (FAZ)", 
-                        tasks: [
-                            { text: "Root/Downstream cihazların SAML SSO ile Fabric üzerinden bağlanması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/security-fabric" },
-                            { text: "FAZ üzerinde Custom SQL Dataset yazımı ve Event Handler alarm tetikleme.", doc: "FAZ Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortianalyzer/7.4.0/administration-guide/765355/event-handlers" },
-                            { text: "Automation Stitches ile 'Compromised Host' için webhook oluşturma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/automation-stitches" }
-                        ] 
-                    }
+                    { week: "Hafta 9-11", title: "FortiManager (FMG) Operasyonları", tasks: [
+                        { text: "Policy Package, ADOM yapılandırması ve Global Policy konsepti.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/339178/policy-and-objects" },
+                        { text: "Meta-Variables kullanarak dinamik IPsec/BGP Provisioning şablonları oluşturma.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/765355/provisioning-templates" },
+                        { text: "Install/Push hatalarını (Copy fail, Verification fail) diagnose loglarından bulma.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiManager/Troubleshooting-Tip-Install-fails-with-verification-error/ta-p/192245" }
+                    ]},
+                    { week: "Hafta 12-13", title: "Security Fabric & FortiAnalyzer (FAZ)", tasks: [
+                        { text: "Root/Downstream cihazların SAML SSO ile Fabric üzerinden bağlanması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/security-fabric" },
+                        { text: "FAZ üzerinde Custom SQL Dataset yazımı ve Event Handler alarm tetikleme.", doc: "FAZ Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortianalyzer/7.4.0/administration-guide/765355/event-handlers" },
+                        { text: "Automation Stitches ile 'Compromised Host' için webhook oluşturma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/automation-stitches" }
+                    ]}
                 ]
             },
             {
                 phase: "4. Kimlik (Identity), ZTNA ve L7 Uzmanlık (Hafta 14-19)",
                 weeks: [
-                    { 
-                        week: "Hafta 14-16", 
-                        title: "FortiAuthenticator, FSSO ve ZTNA", 
-                        tasks: [
-                            { text: "FortiAuthenticator: RADIUS, LDAP entegrasyonu ve SAML IDP yapılandırması.", doc: "FAC Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiauthenticator/6.4.0/administration-guide/" },
-                            { text: "FSSO Polling ve DC Agent modlarının FortiGate üzerinde yapılandırılması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
-                            { text: "EMS ile ZTNA Access Proxy kurulumu (HTTPS/TCP) ve ZTNA Tag tabanlı policy.", doc: "ZTNA Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/903698/zero-trust-network-access-ztna" }
-                        ] 
-                    },
-                    { 
-                        week: "Hafta 17-19", 
-                        title: "FortiWeb (WAF) & FortiMail Mimarileri", 
-                        tasks: [
-                            { text: "FWEB Reverse Proxy mod, Virtual Server ve Machine Learning WAF profili.", doc: "FWEB Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiweb/7.4.0/administration-guide/339178/server-objects" },
-                            { text: "X-Forwarded-For analizi ve SSL Offloading sorunlarını çözme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiWeb/Troubleshooting-Tip-X-Forwarded-For-XFF-header-is-not/ta-p/192247" },
-                            { text: "FMAIL Gateway mod kurulumu, DMARC/DKIM/SPF kayıt doğrulama teşhisi.", doc: "FMAIL Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimail/7.4.0/administration-guide/" }
-                        ] 
-                    }
+                    { week: "Hafta 14-16", title: "FortiAuthenticator, FSSO ve ZTNA", tasks: [
+                        { text: "FortiAuthenticator: RADIUS, LDAP entegrasyonu ve SAML IDP yapılandırması.", doc: "FAC Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiauthenticator/6.4.0/administration-guide/" },
+                        { text: "FSSO Polling ve DC Agent modlarının FortiGate üzerinde yapılandırılması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
+                        { text: "EMS ile ZTNA Access Proxy kurulumu (HTTPS/TCP) ve ZTNA Tag tabanlı policy.", doc: "ZTNA Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/903698/zero-trust-network-access-ztna" }
+                    ]},
+                    { week: "Hafta 17-19", title: "FortiWeb (WAF) & FortiMail Mimarileri", tasks: [
+                        { text: "FWEB Reverse Proxy mod, Virtual Server ve Machine Learning WAF profili.", doc: "FWEB Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiweb/7.4.0/administration-guide/339178/server-objects" },
+                        { text: "X-Forwarded-For analizi ve SSL Offloading sorunlarını çözme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiWeb/Troubleshooting-Tip-X-Forwarded-For-XFF-header-is-not/ta-p/192247" },
+                        { text: "FMAIL Gateway mod kurulumu, DMARC/DKIM/SPF kayıt doğrulama teşhisi.", doc: "FMAIL Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimail/7.4.0/administration-guide/" }
+                    ]}
                 ]
             },
             {
                 phase: "5. Lab Simülasyonu ve Advanced Debug (Hafta 20-24)",
                 weeks: [
-                    { 
-                        week: "Hafta 20-22", 
-                        title: "Senaryo Bazlı Troubleshooting", 
-                        tasks: [
-                            { text: "'diag sys top' ve 'diag sys kill' ile WAD/IPS daemon yüksek CPU tespiti.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-How-to-troubleshoot-high-memory-usage-and/ta-p/192235" },
-                            { text: "Kernel ARP/Routing tablolarını fnsysctl ile manipüle etme ve okuma.", doc: "KB Article", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/hardware-acceleration/448301/np6-np6xlite-np6lite-diagnose-commands" },
-                            { text: "Conserve mode tetikleyicilerini değiştirme ve memory leak analizleri.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-Conserve-mode-on-FortiGate/ta-p/192249" }
-                        ] 
-                    },
-                    { 
-                        week: "Hafta 23-24", 
-                        title: "Final Hız Testi (Sınav Hazırlığı)", 
-                        tasks: [
-                            { text: "Tüm topolojiyi sadece CLI Scriptleri ile yapılandırma (Notepad kullanımı).", doc: "Best Practice", type: "TİP", url: "#" },
-                            { text: "Verilen kasıtlı hataları 15 dakika kuralıyla çözüp diğer soruya geçme simülasyonu.", doc: "Exam Strategy", type: "TİP", url: "#" },
-                            { text: "ProctorU ve Sınav odası gereksinimleri son kontrol.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
-                        ] 
-                    }
+                    { week: "Hafta 20-22", title: "Senaryo Bazlı Troubleshooting", tasks: [
+                        { text: "'diag sys top' ve 'diag sys kill' ile WAD/IPS daemon yüksek CPU tespiti.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-How-to-troubleshoot-high-memory-usage-and/ta-p/192235" },
+                        { text: "Kernel ARP/Routing tablolarını fnsysctl ile manipüle etme ve okuma.", doc: "KB Article", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/hardware-acceleration/448301/np6-np6xlite-np6lite-diagnose-commands" },
+                        { text: "Conserve mode tetikleyicilerini değiştirme ve memory leak analizleri.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-Conserve-mode-on-FortiGate/ta-p/192249" }
+                    ]},
+                    { week: "Hafta 23-24", title: "Final Hız Testi (Sınav Hazırlığı)", tasks: [
+                        { text: "Tüm topolojiyi sadece CLI Scriptleri ile yapılandırma (Notepad kullanımı).", doc: "Best Practice", type: "TİP", url: "#" },
+                        { text: "Verilen kasıtlı hataları 15 dakika kuralıyla çözüp diğer soruya geçme simülasyonu.", doc: "Exam Strategy", type: "TİP", url: "#" },
+                        { text: "ProctorU ve Sınav odası gereksinimleri son kontrol.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
+                    ]}
                 ]
             }
         ];
 
-        // Render Accordion with Links
-        function renderSchedule() {
-            const container = document.getElementById('accordionContainer');
-            let globalTaskIndex = 0;
+        const detailedProgramDataEN = [
+            {
+                phase: "1. Core Security and Hardware Architecture (Weeks 1-3)",
+                weeks: [
+                    { week: "Week 1", title: "NP6/NP7 Fast Path & VDOM Architecture", tasks: [
+                        { text: "Hardware Acceleration (NP6/NP7) session offload analysis.", doc: "Life of a Packet", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/parallel-path-processing-life-of-a-packet/86811/packet-flow-ingress-and-egress-fortigates-without-network-processor-offloading" },
+                        { text: "Inter-VDOM routing and VDOM Link asymmetric routing practices.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/96338/virtual-domains" },
+                        { text: "EMAC VLAN configurations (Multiple MAC/VDOMs on the same physical port).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/50170/transparent-mode" }
+                    ]},
+                    { week: "Weeks 2-3", title: "HA (FGCP/FGSP) Advanced Configuration", tasks: [
+                        { text: "FGCP A-P setup, Session Sync (sesync) TCP/UDP timeout settings.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/460456/high-availability" },
+                        { text: "L3 asymmetric environment design with FGSP (Standalone Session Sync).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/653246/fortigate-session-life-support-protocol-fgsp" },
+                        { text: "HA Checksum mismatch troubleshooting (diag sys ha checksum recalculate).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-HA-synchronization-issue-cluster-out-of/ta-p/192233" }
+                    ]}
+                ]
+            },
+            {
+                phase: "2. SD-WAN, ADVPN and Advanced Routing (Weeks 4-8)",
+                weeks: [
+                    { week: "Weeks 4-5", title: "OSPF & BGP Routing Architectures", tasks: [
+                        { text: "Attribute manipulation with BGP Route Reflector (RR) and Route-Map.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/765355/routing" },
+                        { text: "Detecting OSPF over IPsec MTU issues (diag sniffer / fnsysctl ifconfig).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-OSPF-stuck-in-EXSTART-due-to-MTU-mismatch/ta-p/192241" },
+                        { text: "Accelerating BGP/OSPF failover with Bidirectional Forwarding Detection (BFD).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/661841/bfd" }
+                    ]},
+                    { week: "Weeks 6-8", title: "Secure SD-WAN & ADVPN (Heart of the Exam)", tasks: [
+                        { text: "IKEv2 ADVPN Phase 1/Phase 2 shortcut tunnel configuration.", doc: "Architecture", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/sd-wan-architecture-for-enterprise/468641/advpn" },
+                        { text: "Integration of SD-WAN Rules, SLA targets, and BGP overlay routes.", doc: "SD-WAN Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/95304/sd-wan" },
+                        { text: "Troubleshooting SD-WAN Zone and tunnel interface routing dependencies.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-SD-WAN-Rule-not-matching/ta-p/192661" }
+                    ]}
+                ]
+            },
+            {
+                phase: "3. FMG/FAZ Central Management and Automation (Weeks 9-13)",
+                weeks: [
+                    { week: "Weeks 9-11", title: "FortiManager (FMG) Operations", tasks: [
+                        { text: "Policy Package, ADOM configuration, and Global Policy concept.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/339178/policy-and-objects" },
+                        { text: "Creating dynamic IPsec/BGP Provisioning templates using Meta-Variables.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/765355/provisioning-templates" },
+                        { text: "Finding Install/Push errors (Copy fail, Verification fail) from diagnose logs.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiManager/Troubleshooting-Tip-Install-fails-with-verification-error/ta-p/192245" }
+                    ]},
+                    { week: "Weeks 12-13", title: "Security Fabric & FortiAnalyzer (FAZ)", tasks: [
+                        { text: "Connecting Root/Downstream devices via Fabric with SAML SSO.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/security-fabric" },
+                        { text: "Writing Custom SQL Datasets and triggering Event Handler alarms on FAZ.", doc: "FAZ Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortianalyzer/7.4.0/administration-guide/765355/event-handlers" },
+                        { text: "Creating a webhook for 'Compromised Host' with Automation Stitches.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/automation-stitches" }
+                    ]}
+                ]
+            },
+            {
+                phase: "4. Identity, ZTNA and L7 Expertise (Weeks 14-19)",
+                weeks: [
+                    { week: "Weeks 14-16", title: "FortiAuthenticator, FSSO and ZTNA", tasks: [
+                        { text: "FortiAuthenticator: RADIUS, LDAP integration and SAML IDP configuration.", doc: "FAC Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiauthenticator/6.4.0/administration-guide/" },
+                        { text: "Configuring FSSO Polling and DC Agent modes on FortiGate.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
+                        { text: "ZTNA Access Proxy setup (HTTPS/TCP) with EMS and ZTNA Tag-based policies.", doc: "ZTNA Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/903698/zero-trust-network-access-ztna" }
+                    ]},
+                    { week: "Weeks 17-19", title: "FortiWeb (WAF) & FortiMail Architectures", tasks: [
+                        { text: "FWEB Reverse Proxy mode, Virtual Server and Machine Learning WAF profile.", doc: "FWEB Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiweb/7.4.0/administration-guide/339178/server-objects" },
+                        { text: "X-Forwarded-For analysis and SSL Offloading troubleshooting.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiWeb/Troubleshooting-Tip-X-Forwarded-For-XFF-header-is-not/ta-p/192247" },
+                        { text: "FMAIL Gateway mode setup, DMARC/DKIM/SPF record verification diagnostics.", doc: "FMAIL Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimail/7.4.0/administration-guide/" }
+                    ]}
+                ]
+            },
+            {
+                phase: "5. Lab Simulation and Advanced Debug (Weeks 20-24)",
+                weeks: [
+                    { week: "Weeks 20-22", title: "Scenario-Based Troubleshooting", tasks: [
+                        { text: "WAD/IPS daemon high CPU detection with 'diag sys top' and 'diag sys kill'.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-How-to-troubleshoot-high-memory-usage-and/ta-p/192235" },
+                        { text: "Manipulating and reading Kernel ARP/Routing tables with fnsysctl.", doc: "KB Article", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/hardware-acceleration/448301/np6-np6xlite-np6lite-diagnose-commands" },
+                        { text: "Modifying conserve mode triggers and memory leak analysis.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-Conserve-mode-on-FortiGate/ta-p/192249" }
+                    ]},
+                    { week: "Weeks 23-24", title: "Final Speed Test (Exam Preparation)", tasks: [
+                        { text: "Configuring the entire topology using only CLI Scripts (Notepad usage).", doc: "Best Practice", type: "TİP", url: "#" },
+                        { text: "Simulation of solving given intentional faults with the 15-minute rule and moving to the next question.", doc: "Exam Strategy", type: "TİP", url: "#" },
+                        { text: "Final check of ProctorU and Exam room requirements.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
+                    ]}
+                ]
+            }
+        ];
 
-            detailedProgramData.forEach((phaseObj, phaseIndex) => {
+        let currentLang = 'tr';
+
+        // Set Language & Update UI
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            // Toggle active styling on buttons
+            if (lang === 'tr') {
+                document.getElementById('btn-tr').classList.replace('text-slate-400', 'text-white');
+                document.getElementById('btn-tr').classList.add('bg-slate-700');
+                document.getElementById('btn-en').classList.replace('text-white', 'text-slate-400');
+                document.getElementById('btn-en').classList.remove('bg-slate-700');
+            } else {
+                document.getElementById('btn-en').classList.replace('text-slate-400', 'text-white');
+                document.getElementById('btn-en').classList.add('bg-slate-700');
+                document.getElementById('btn-tr').classList.replace('text-white', 'text-slate-400');
+                document.getElementById('btn-tr').classList.remove('bg-slate-700');
+            }
+
+            // Translate static elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) {
+                    el.innerHTML = i18n[lang][key];
+                }
+            });
+
+            // Re-render schedule data without losing checkbox state
+            renderSchedule();
+        }
+
+        // Help preserve checkbox states during re-render
+        function getCheckboxStates() {
+            const states = {};
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                states[cb.id] = cb.checked;
+            });
+            return states;
+        }
+
+        function applyCheckboxStates(states) {
+            Object.keys(states).forEach(id => {
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = states[id];
+            });
+            updateProgress();
+        }
+
+        // Render Accordion dynamically based on current language
+        function renderSchedule() {
+            const states = getCheckboxStates();
+            const container = document.getElementById('accordionContainer');
+            
+            // Save open accordion states
+            const openAccordions = {};
+            if (container.children.length > 0) {
+                container.querySelectorAll('.accordion-content').forEach(el => {
+                    openAccordions[el.id] = el.classList.contains('open');
+                });
+            } else {
+                openAccordions['phase-0'] = true; // Default first open
+            }
+
+            container.innerHTML = '';
+            let globalTaskIndex = 0;
+            const dataToRender = currentLang === 'tr' ? detailedProgramDataTR : detailedProgramDataEN;
+
+            dataToRender.forEach((phaseObj, phaseIndex) => {
                 const phaseId = `phase-${phaseIndex}`;
+                const isOpen = openAccordions[phaseId] ? 'open' : '';
+                const iconRotate = openAccordions[phaseId] ? 'transform: rotate(180deg);' : 'transform: rotate(0deg);';
+
                 let weeksHtml = phaseObj.weeks.map(week => {
                     let tasksHtml = week.tasks.map(task => {
                         const taskId = `task-${globalTaskIndex++}`;
@@ -333,9 +498,9 @@ diag debug enable
                     <div class="border border-slate-700 rounded-lg bg-slate-800 overflow-hidden shadow-lg">
                         <button onclick="toggleAccordion('${phaseId}', this)" class="w-full text-left px-6 py-4 bg-slate-800 hover:bg-slate-700 flex justify-between items-center transition-colors focus:outline-none">
                             <span class="font-bold text-base text-slate-200">${phaseObj.phase}</span>
-                            <i data-lucide="chevron-down" class="text-slate-400 transition-transform duration-300 transform accordion-icon"></i>
+                            <i data-lucide="chevron-down" class="text-slate-400 transition-transform duration-300 transform accordion-icon" style="${iconRotate}"></i>
                         </button>
-                        <div id="${phaseId}" class="accordion-content px-6 py-5 border-t border-slate-700 bg-slate-900/50">
+                        <div id="${phaseId}" class="accordion-content px-6 py-5 border-t border-slate-700 bg-slate-900/50 ${isOpen}">
                             ${weeksHtml}
                         </div>
                     </div>
@@ -343,11 +508,9 @@ diag debug enable
                 container.innerHTML += phaseHtml;
             });
             
-            // İlk fazı açık bırak
             setTimeout(() => {
-                const firstPhaseBtn = container.querySelector('button');
-                if(firstPhaseBtn) toggleAccordion('phase-0', firstPhaseBtn);
-                lucide.createIcons(); // Re-init icons for dynamic content
+                lucide.createIcons(); // Re-init icons
+                applyCheckboxStates(states); // Restore checkboxes
             }, 50);
         }
 
@@ -412,9 +575,10 @@ diag debug enable
             progressText.innerText = percentage + '%';
         }
 
-        // Initialize
+        // Initialize App
         window.onload = () => {
-            renderSchedule();
+            lucide.createIcons();
+            setLanguage('tr'); // Sets default language to TR & triggers render
             updateProgress();
         };
     </script>
