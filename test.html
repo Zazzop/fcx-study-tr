@@ -149,12 +149,15 @@
                     
                     <!-- User Auth Button (Firebase) -->
                     <div id="auth-container" class="flex items-center gap-2">
-                        <button id="login-btn" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition-colors shadow-lg">
+                        <button id="login-btn" onclick="window.doLogin()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-bold transition-colors shadow-lg">
                             <i data-lucide="log-in" class="w-4 h-4"></i> <span data-i18n="btnLogin">Giriş Yap</span>
                         </button>
                         <div id="user-info" class="hidden flex items-center gap-3 bg-neutral-800/50 px-3 py-1.5 rounded-lg border border-neutral-700 cursor-pointer hover:bg-neutral-800 transition" onclick="window.showTab('profile')">
                             <img id="user-photo" src="" alt="Profile" class="w-6 h-6 rounded-full border border-neutral-500">
                             <span id="user-name" class="text-sm font-semibold text-neutral-200"></span>
+                            <button id="logout-btn" onclick="window.doLogout(); event.stopPropagation();" class="text-neutral-400 hover:text-red-400 transition-colors ml-2" title="Çıkış Yap">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -457,7 +460,7 @@ diag debug enable</pre>
                     <i data-lucide="shield-alert" class="w-16 h-16 text-neutral-600 mx-auto mb-4"></i>
                     <h3 class="text-xl font-bold text-neutral-300 mb-2" data-i18n="profileNotLoggedInTitle">Giriş Yapılmadı</h3>
                     <p class="text-neutral-500 mb-6" data-i18n="profileNotLoggedIn">Profilinizi ve istatistiklerinizi görmek için lütfen Google hesabınızla giriş yapın.</p>
-                    <button onclick="document.getElementById('login-btn').click()" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition-colors shadow-lg">
+                    <button onclick="window.doLogin()" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold transition-colors shadow-lg">
                         <i data-lucide="log-in" class="w-5 h-5"></i> <span data-i18n="btnLogin">Giriş Yap</span>
                     </button>
                 </div>
@@ -475,7 +478,8 @@ diag debug enable</pre>
                             <h3 id="profile-page-name" class="text-xl font-extrabold text-white mb-1"></h3>
                             <p id="profile-page-email" class="text-sm text-neutral-500 mb-8 font-medium"></p>
                             
-                            <button id="profile-logout-btn" class="w-full py-2.5 bg-neutral-800 hover:bg-red-600/20 hover:text-red-400 hover:border-red-600/30 text-neutral-300 rounded-xl transition-colors border border-neutral-700 flex items-center justify-center gap-2 font-bold">
+                            <!-- Updated: Profile Logout Button with explicit global window function -->
+                            <button id="profile-logout-btn" onclick="window.doLogout()" class="w-full py-2.5 bg-neutral-800 hover:bg-red-600/20 hover:text-red-400 hover:border-red-600/30 text-neutral-300 rounded-xl transition-colors border border-neutral-700 flex items-center justify-center gap-2 font-bold">
                                 <i data-lucide="log-out" class="w-4 h-4"></i> <span data-i18n="btnLogout">Çıkış Yap</span>
                             </button>
                         </div>
@@ -543,11 +547,10 @@ diag debug enable</pre>
         const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        let currentUser = null;
+        window.currentUser = null;
 
         // UI Elements
         const loginBtn = document.getElementById('login-btn');
-        const logoutBtn = document.getElementById('logout-btn');
         const userInfo = document.getElementById('user-info');
         const userName = document.getElementById('user-name');
         const userPhoto = document.getElementById('user-photo');
@@ -559,13 +562,12 @@ diag debug enable</pre>
         const profilePageAvatar = document.getElementById('profile-page-avatar');
         const profilePageName = document.getElementById('profile-page-name');
         const profilePageEmail = document.getElementById('profile-page-email');
-        const profileLogoutBtn = document.getElementById('profile-logout-btn');
 
         // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in
-                currentUser = user;
+                window.currentUser = user;
                 
                 // Top Nav Update
                 loginBtn.classList.add('hidden');
@@ -585,7 +587,7 @@ diag debug enable</pre>
                 await loadUserProgress(user.uid);
             } else {
                 // User is signed out
-                currentUser = null;
+                window.currentUser = null;
                 
                 // Top Nav Update
                 loginBtn.classList.remove('hidden');
@@ -598,32 +600,35 @@ diag debug enable</pre>
 
                 // Clear checkboxes if logged out
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                window.updateProgress();
+                if(window.updateProgress) window.updateProgress();
             }
         });
 
-        // Login Handler
-        loginBtn.addEventListener('click', () => {
+        // Global Login Handler
+        window.doLogin = () => {
             signInWithPopup(auth, provider).catch((error) => {
                 console.error("Login failed:", error);
                 alert("Giriş yapılamadı: " + error.message);
             });
-        });
-
-        // Logout Handler
-        const doLogout = () => {
-            signOut(auth).catch((error) => console.error("Logout failed:", error));
         };
-        logoutBtn.addEventListener('click', (e) => { e.stopPropagation(); doLogout(); });
-        profileLogoutBtn.addEventListener('click', doLogout);
+
+        // Global Logout Handler (Fixed)
+        window.doLogout = () => {
+            signOut(auth).then(() => {
+                // Logout successful. Redirect user visually to main schedule tab.
+                window.showTab('schedule');
+            }).catch((error) => {
+                console.error("Logout failed:", error);
+            });
+        };
 
         // Save Progress to Firestore
         window.saveProgressToDB = async () => {
-            if (!currentUser) return; // Don't save if not logged in
+            if (!window.currentUser) return; // Don't save if not logged in
 
             const states = window.getCheckboxStates();
             try {
-                await setDoc(doc(db, "userProgress", currentUser.uid), {
+                await setDoc(doc(db, "userProgress", window.currentUser.uid), {
                     progress: states,
                     lastUpdated: new Date()
                 });
@@ -640,7 +645,9 @@ diag debug enable</pre>
 
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    window.applyCheckboxStates(data.progress || {});
+                    if(window.applyCheckboxStates) {
+                        window.applyCheckboxStates(data.progress || {});
+                    }
                 }
             } catch (e) {
                 console.error("Error loading progress: ", e);
@@ -1013,7 +1020,7 @@ diag debug enable</pre>
                         
                         return `
                             <li class="flex items-start gap-3 p-3.5 rounded-xl bg-black/40 hover:bg-[#111] transition-all duration-300 group border border-neutral-800/80 hover:border-neutral-600">
-                                <input type="checkbox" id="${taskId}" onchange="updateProgress()" class="mt-1 w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500 bg-black border-neutral-700 cursor-pointer transition-shadow">
+                                <input type="checkbox" id="${taskId}" onchange="window.updateProgress()" class="mt-1 w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500 bg-black border-neutral-700 cursor-pointer transition-shadow">
                                 <label for="${taskId}" class="text-sm text-neutral-300 cursor-pointer select-none group-hover:text-white flex-grow transition-colors">${task.text}</label>
                                 ${task.url !== "#" ? 
                                     `<a href="${task.url}" target="_blank" class="doc-link shrink-0 text-[10px] font-bold px-2 py-1.5 rounded-lg border ${badgeColor} flex items-center gap-1.5 hover:bg-white/5 transition-all">
@@ -1071,8 +1078,10 @@ diag debug enable</pre>
             document.getElementById(tabId).classList.add('active');
             const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
             
-            activeBtn.classList.remove('text-neutral-500', 'hover:bg-[#111]/50', 'border-transparent');
-            activeBtn.classList.add('active', 'text-white', 'bg-[#111]', 'border-t', 'border-l', 'border-r', 'border-neutral-800', 'z-10', '-mb-[1px]');
+            if(activeBtn) {
+                activeBtn.classList.remove('text-neutral-500', 'hover:bg-[#111]/50', 'border-transparent');
+                activeBtn.classList.add('active', 'text-white', 'bg-[#111]', 'border-t', 'border-l', 'border-r', 'border-neutral-800', 'z-10', '-mb-[1px]');
+            }
         }
 
         // Accordion Logic
