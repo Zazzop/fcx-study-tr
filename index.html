@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://via.placeholder.com https://lh3.googleusercontent.com; connect-src 'self' https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com;">
-    <title>FCX (NSE 8) Advanced Study Portal v2</title>
+    <title>FCX Study TR - Advanced Study Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -140,7 +140,7 @@
                     </div>
                     <div>
                         <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                            FCX <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">v2</span>
+                            FCX Study <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">TR</span>
                         </h1>
                         <p class="text-xs font-medium text-neutral-400" data-i18n="subtitle">NSE 7'den FCX'e Geçiş Portalı - Referanslı Doküman</p>
                     </div>
@@ -524,6 +524,13 @@ diag debug enable</pre>
 
     </main>
 
+    <!-- Footer -->
+    <footer class="mt-auto py-6 border-t border-neutral-800/50 bg-[#0a0a0a] text-center text-sm text-neutral-500 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p data-i18n="footerDisclaimer">Bu site bağımsız bir çalışma kılavuzudur ve Fortinet ile resmi bir bağı yoktur. Sitedeki bilgilerin doğruluğu ve kullanımı ile ilgili herhangi bir yasal sorumluluk kabul edilmemektedir.</p>
+        </div>
+    </footer>
+
     <!-- Firebase SDK Setup -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
@@ -727,7 +734,8 @@ diag debug enable</pre>
                 resArt3: "NSE8-003459 sertifika süreci, çalışma ipuçları ve lab sınavı deneyimleri üzerine bir röportaj.",
                 resYT1: "Fortinet ürünleri ve genel siber güvenlik konfigürasyonları üzerine detaylı ve öğretici videolar.",
                 resYT2: "CCIE eğitmeni Keith Barker'dan IT Güvenliği ve kapsamlı Fortinet topoloji eğitimleri.",
-                resYT3: "Ağ, güvenlik ve karmaşık sertifikasyon (NSE/CCIE/JNCIE) konularına yönelik teknik derinlikli eğitimler."
+                resYT3: "Ağ, güvenlik ve karmaşık sertifikasyon (NSE/CCIE/JNCIE) konularına yönelik teknik derinlikli eğitimler.",
+                footerDisclaimer: "Bu site bağımsız bir çalışma kılavuzudur ve Fortinet ile resmi bir bağı yoktur. Sitedeki bilgilerin doğruluğu ve kullanımı ile ilgili herhangi bir yasal sorumluluk kabul edilmemektedir."
             },
             en: {
                 subtitle: "NSE 7 to FCX Transition Portal - Document Referenced",
@@ -777,7 +785,8 @@ diag debug enable</pre>
                 resArt3: "An interview on the NSE8-003459 certification journey, study tips, and lab exam experiences.",
                 resYT1: "Detailed and educational videos on Fortinet products and general cybersecurity configurations.",
                 resYT2: "IT Security and comprehensive Fortinet topology training from CCIE trainer Keith Barker.",
-                resYT3: "Deep technical training aimed at networking, security, and complex certification (NSE/CCIE/JNCIE) topics."
+                resYT3: "Deep technical training aimed at networking, security, and complex certification (NSE/CCIE/JNCIE) topics.",
+                footerDisclaimer: "This site is an independent study guide and is not officially affiliated with Fortinet. No legal liability is accepted regarding the accuracy and use of the information on the site."
             }
         };
 
@@ -833,7 +842,7 @@ diag debug enable</pre>
                 weeks: [
                     { week: "Hafta 14-16", title: "FortiAuthenticator, FSSO ve ZTNA", tasks: [
                         { text: "FortiAuthenticator: RADIUS, LDAP entegrasyonu ve SAML IDP yapılandırması.", doc: "FAC Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiauthenticator/6.4.0/administration-guide/" },
-                        { text: "FSSO Polling ve DC Agent modlarının FortiGate üzerinde yapılandırılması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
+                        { text: "Configuring FSSO Polling and DC Agent modlarının FortiGate üzerinde yapılandırılması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
                         { text: "EMS ile ZTNA Access Proxy kurulumu (HTTPS/TCP) ve ZTNA Tag tabanlı policy.", doc: "ZTNA Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/903698/zero-trust-network-access-ztna" }
                     ]},
                     { week: "Hafta 17-19", title: "FortiWeb (WAF) & FortiMail Mimarileri", tasks: [
