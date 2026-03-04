@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCX (NSE 8) İleri Seviye Çalışma Portalı v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .font-code { font-family: 'JetBrains Mono', monospace; }
+        .tab-content { display: none; animation: fadeIn 0.2s ease-in; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .accordion-content { display: none; }
+        .accordion-content.open { display: block; }
+        .doc-link { transition: all 0.2s; }
+        .doc-link:hover { transform: translateX(2px); }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-red-600 p-2 rounded-lg border border-red-500 shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                        <i data-lucide="terminal-square" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                            FCX <span class="text-red-500">v2</span>
+                        </h1>
+                        <p class="text-xs font-medium text-slate-400">NSE 7 to FCX Transition Portal - Document Referenced</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800 px-5 py-3 rounded-xl border border-slate-700 w-full md:w-72">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-xs uppercase font-bold text-slate-400">Mastery Progress</span>
+                        <span id="progressText" class="text-sm font-bold text-emerald-400 font-code">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2">
+                        <div id="mainProgress" class="bg-gradient-to-r from-red-600 to-emerald-500 h-2 rounded-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(16,185,129,0.4)]" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <!-- Navigation Tabs -->
+        <div class="flex overflow-x-auto gap-2 mb-6 border-b border-slate-800 pb-px scrollbar-hide">
+            <button onclick="showTab('schedule')" class="tab-btn active relative flex items-center gap-2 px-6 py-3 font-semibold text-white bg-slate-800 border-t border-l border-r border-slate-700 rounded-t-lg z-10 -mb-[1px]">
+                <i data-lucide="git-branch" class="w-4 h-4 text-red-400"></i> Referenced Study Plan
+            </button>
+            <button onclick="showTab('nse7-gap')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent">
+                <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i> NSE 7 -> FCX Gap Analysis
+            </button>
+            <button onclick="showTab('debug-cheatsheet')" class="tab-btn relative flex items-center gap-2 px-6 py-3 font-semibold text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg transition-colors border border-transparent">
+                <i data-lucide="stethoscope" class="w-4 h-4 text-emerald-400"></i> Deep Debug Cheatsheet
+            </button>
+        </div>
+
+        <!-- Tab: Referenced Schedule -->
+        <div id="schedule" class="tab-content active">
+            <div class="bg-slate-800/50 rounded-xl border border-slate-700 p-6 mb-6 backdrop-blur-sm">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold flex items-center gap-2 text-white"><i data-lucide="book-open-check" class="text-red-500"></i> FCX Master Lab Curriculum</h2>
+                        <p class="text-slate-400 text-sm mt-1">Tüm görevler FortiOS 7.2/7.4 Admin Guide ve Troubleshooting KB'lerine referanslanmıştır.</p>
+                    </div>
+                    <button onclick="expandAll()" class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded transition">Tümünü Aç/Kapat</button>
+                </div>
+                
+                <div id="accordionContainer" class="space-y-3">
+                    <!-- Dinamik olarak JS ile doldurulacak -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: NSE 7 to FCX Gap Analysis -->
+        <div id="nse7-gap" class="tab-content">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
+                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="shield-alert" class="text-yellow-500"></i> NSE 7 Olarak Zaten Bildikleriniz (Zaman Harcamayın)</h3>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Temel Firewall Policy ve NAT kuralları.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Basit OSPF komşulukları ve statik routing.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> SD-WAN temel kuralları (Volume/Session tabanlı yük dengeleme).</li>
+                        <li class="flex items-start gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-500 shrink-0"></i> Security Profile'ların (AV, Web Filter, IPS) standart kullanımı.</li>
+                    </ul>
+                </div>
+                <div class="bg-gradient-to-br from-red-900/40 to-slate-900 p-6 rounded-xl border border-red-900/50 shadow-inner">
+                    <h3 class="text-lg font-bold mb-4 text-white flex items-center gap-2"><i data-lucide="target" class="text-red-500"></i> FCX İçin Odaklanmanız Gereken "Gap" (Eksik) Alanlar</h3>
+                    <ul class="space-y-3 text-sm text-slate-200">
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>ADVPN + BGP Route Reflector:</strong> SD-WAN SLA'lerinin BGP rotalarıyla dinamik olarak nasıl konuştuğu. (Overlay routing).</li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>FMG Provisioning:</strong> CLI scriptlerini meta-variable'lar ile FortiManager üzerinden yüzlerce cihaza hatasız basmak.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>ZTNA & EMS Entegrasyonu:</strong> SAML IDP kimlik doğrulaması ile Access Proxy üzerinden HTTPS/TCP trafiğini yönetmek.</li>
+                        <li class="flex items-start gap-2"><i data-lucide="arrow-right" class="w-5 h-5 text-red-400 shrink-0"></i> <strong>Kasıtlı Hatalar:</strong> Sınavda size MTU mismatch olan, asimetrik route edilmiş tüneller verilecek. GUI'den anlamanız imkansızdır, debug flow şarttır.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Deep Debug Cheatsheet -->
+        <div id="debug-cheatsheet" class="tab-content">
+            <div class="bg-slate-900 rounded-xl border border-slate-700 overflow-hidden shadow-2xl">
+                <div class="bg-slate-800 px-6 py-4 border-b border-slate-700 flex justify-between items-center">
+                    <h3 class="text-white font-bold flex items-center gap-2"><i data-lucide="terminal" class="text-emerald-400"></i> FCX Survival CLI Commands</h3>
+                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded border border-red-500/30">Notepad'e Kopyala</span>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Flow Trace -->
+                    <div>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">1. Asimetrik Routing & Drop Tespiti (Life of a Packet)</h4>
+                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-green-400 overflow-x-auto border border-slate-700">
+<span class="text-slate-500"># Her zaman filtre ile başlayın, yoksa CPU tavan yapar.</span>
+diag debug flow filter addr x.x.x.x
+diag debug flow filter protocol 1 <span class="text-slate-500"># ICMP</span>
+diag debug flow show function-name enable <span class="text-slate-500"># Kernel fonksiyonunu gösterir (Çok kritik!)</span>
+diag debug flow trace start 100
+diag debug enable
+<span class="text-slate-500"># İşi bitince:</span>
+diag debug disable & diag debug flow trace stop & diag debug flow filter clear
+                        </div>
+                    </div>
+                    
+                    <!-- IKE & IPsec -->
+                    <div>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">2. IPsec VPN Neden Kalkmıyor?</h4>
+                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-blue-400 overflow-x-auto border border-slate-700">
+<span class="text-slate-500"># GUI 'Negotiation Timeout' der ama gerçeği CLI söyler (Örn: Peer ID mismatch, Proposal mismatch).</span>
+diag vpn ike log-filter clear
+diag vpn ike log-filter dst-addr4 x.x.x.x
+diag debug app ike -1
+diag debug enable
+<span class="text-slate-500"># Tünel faz 2 durumunu kernel seviyesinde görme:</span>
+diag vpn tunnel list name TUNNEL_NAME
+                        </div>
+                    </div>
+
+                    <!-- BGP -->
+                    <div>
+                        <h4 class="text-slate-300 font-semibold mb-2 text-sm border-b border-slate-700 pb-1">3. BGP Komşuluk ve Route İncelemesi</h4>
+                        <div class="bg-[#1e1e1e] p-4 rounded-lg font-code text-sm text-yellow-400 overflow-x-auto border border-slate-700">
+<span class="text-slate-500"># Komşuluk var ama route neden RIB'e inmedi?</span>
+get router info bgp summary
+get router info bgp neighbors x.x.x.x advertised-routes
+get router info bgp neighbors x.x.x.x received-routes
+<span class="text-slate-500"># BGP paket debug (Update'leri izlemek için):</span>
+diag ip router bgp all enable
+diag ip router bgp level info
+diag debug enable
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Data Structure with Fortinet Documentation Links
+        const detailedProgramData = [
+            {
+                phase: "1. Çekirdek Güvenlik ve Donanım Mimari (Hafta 1-3)",
+                weeks: [
+                    { 
+                        week: "Hafta 1", 
+                        title: "NP6/NP7 Fast Path & VDOM Mimarisi", 
+                        tasks: [
+                            { text: "Hardware Acceleration (NP6/NP7) session offload analizi.", doc: "Life of a Packet", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/parallel-path-processing-life-of-a-packet/86811/packet-flow-ingress-and-egress-fortigates-without-network-processor-offloading" },
+                            { text: "Inter-VDOM routing ve VDOM Link asimetrik yönlendirme pratikleri.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/96338/virtual-domains" },
+                            { text: "EMAC VLAN konfigürasyonları (Aynı fiziksel portta birden fazla MAC/VDOM).", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/50170/transparent-mode" }
+                        ] 
+                    },
+                    { 
+                        week: "Hafta 2-3", 
+                        title: "HA (FGCP/FGSP) İleri Konfigürasyon", 
+                        tasks: [
+                            { text: "FGCP A-P kurulumu, Session Sync (sesync) TCP/UDP timeout ayarları.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/460456/high-availability" },
+                            { text: "FGSP (Standalone Session Sync) ile L3 asimetrik ortam tasarımı.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/653246/fortigate-session-life-support-protocol-fgsp" },
+                            { text: "HA Checksum mismatch hatası giderme (diag sys ha checksum recalculate).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-HA-synchronization-issue-cluster-out-of/ta-p/192233" }
+                        ] 
+                    }
+                ]
+            },
+            {
+                phase: "2. SD-WAN, ADVPN ve İleri Yönlendirme (Hafta 4-8)",
+                weeks: [
+                    { 
+                        week: "Hafta 4-5", 
+                        title: "OSPF & BGP Routing Mimarileri", 
+                        tasks: [
+                            { text: "BGP Route Reflector (RR) ve Route-Map ile özellik (attribute) manipülasyonu.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/765355/routing" },
+                            { text: "OSPF over IPsec MTU sorunları tespiti (diag sniffer / fnsysctl ifconfig).", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-OSPF-stuck-in-EXSTART-due-to-MTU-mismatch/ta-p/192241" },
+                            { text: "Bidirectional Forwarding Detection (BFD) ile BGP/OSPF failover hızlandırma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/661841/bfd" }
+                        ] 
+                    },
+                    { 
+                        week: "Hafta 6-8", 
+                        title: "Secure SD-WAN & ADVPN (Sınavın Kalbi)", 
+                        tasks: [
+                            { text: "IKEv2 ADVPN Phase 1/Phase 2 shortcut tünel yapılandırması.", doc: "Architecture", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/sd-wan-architecture-for-enterprise/468641/advpn" },
+                            { text: "SD-WAN Rules, SLA hedefleri ve BGP overlay rotalarının entegrasyonu.", doc: "SD-WAN Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/95304/sd-wan" },
+                            { text: "SD-WAN Zone ve tünel interface routing bağımlılıklarını troubleshoot etme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-SD-WAN-Rule-not-matching/ta-p/192661" }
+                        ] 
+                    }
+                ]
+            },
+            {
+                phase: "3. FMG/FAZ Merkezi Yönetim ve Otomasyon (Hafta 9-13)",
+                weeks: [
+                    { 
+                        week: "Hafta 9-11", 
+                        title: "FortiManager (FMG) Operasyonları", 
+                        tasks: [
+                            { text: "Policy Package, ADOM yapılandırması ve Global Policy konsepti.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/339178/policy-and-objects" },
+                            { text: "Meta-Variables kullanarak dinamik IPsec/BGP Provisioning şablonları oluşturma.", doc: "FMG Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimanager/7.4.0/administration-guide/765355/provisioning-templates" },
+                            { text: "Install/Push hatalarını (Copy fail, Verification fail) diagnose loglarından bulma.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiManager/Troubleshooting-Tip-Install-fails-with-verification-error/ta-p/192245" }
+                        ] 
+                    },
+                    { 
+                        week: "Hafta 12-13", 
+                        title: "Security Fabric & FortiAnalyzer (FAZ)", 
+                        tasks: [
+                            { text: "Root/Downstream cihazların SAML SSO ile Fabric üzerinden bağlanması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/security-fabric" },
+                            { text: "FAZ üzerinde Custom SQL Dataset yazımı ve Event Handler alarm tetikleme.", doc: "FAZ Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortianalyzer/7.4.0/administration-guide/765355/event-handlers" },
+                            { text: "Automation Stitches ile 'Compromised Host' için webhook oluşturma.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/automation-stitches" }
+                        ] 
+                    }
+                ]
+            },
+            {
+                phase: "4. Kimlik (Identity), ZTNA ve L7 Uzmanlık (Hafta 14-19)",
+                weeks: [
+                    { 
+                        week: "Hafta 14-16", 
+                        title: "FortiAuthenticator, FSSO ve ZTNA", 
+                        tasks: [
+                            { text: "FortiAuthenticator: RADIUS, LDAP entegrasyonu ve SAML IDP yapılandırması.", doc: "FAC Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiauthenticator/6.4.0/administration-guide/" },
+                            { text: "FSSO Polling ve DC Agent modlarının FortiGate üzerinde yapılandırılması.", doc: "Admin Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/339178/fsso" },
+                            { text: "EMS ile ZTNA Access Proxy kurulumu (HTTPS/TCP) ve ZTNA Tag tabanlı policy.", doc: "ZTNA Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortigate/7.4.0/administration-guide/903698/zero-trust-network-access-ztna" }
+                        ] 
+                    },
+                    { 
+                        week: "Hafta 17-19", 
+                        title: "FortiWeb (WAF) & FortiMail Mimarileri", 
+                        tasks: [
+                            { text: "FWEB Reverse Proxy mod, Virtual Server ve Machine Learning WAF profili.", doc: "FWEB Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortiweb/7.4.0/administration-guide/339178/server-objects" },
+                            { text: "X-Forwarded-For analizi ve SSL Offloading sorunlarını çözme.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiWeb/Troubleshooting-Tip-X-Forwarded-For-XFF-header-is-not/ta-p/192247" },
+                            { text: "FMAIL Gateway mod kurulumu, DMARC/DKIM/SPF kayıt doğrulama teşhisi.", doc: "FMAIL Guide", type: "DOC", url: "https://docs.fortinet.com/document/fortimail/7.4.0/administration-guide/" }
+                        ] 
+                    }
+                ]
+            },
+            {
+                phase: "5. Lab Simülasyonu ve Advanced Debug (Hafta 20-24)",
+                weeks: [
+                    { 
+                        week: "Hafta 20-22", 
+                        title: "Senaryo Bazlı Troubleshooting", 
+                        tasks: [
+                            { text: "'diag sys top' ve 'diag sys kill' ile WAD/IPS daemon yüksek CPU tespiti.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-How-to-troubleshoot-high-memory-usage-and/ta-p/192235" },
+                            { text: "Kernel ARP/Routing tablolarını fnsysctl ile manipüle etme ve okuma.", doc: "KB Article", type: "KB", url: "https://docs.fortinet.com/document/fortigate/7.4.0/hardware-acceleration/448301/np6-np6xlite-np6lite-diagnose-commands" },
+                            { text: "Conserve mode tetikleyicilerini değiştirme ve memory leak analizleri.", doc: "KB Article", type: "KB", url: "https://community.fortinet.com/t5/FortiGate/Troubleshooting-Tip-Conserve-mode-on-FortiGate/ta-p/192249" }
+                        ] 
+                    },
+                    { 
+                        week: "Hafta 23-24", 
+                        title: "Final Hız Testi (Sınav Hazırlığı)", 
+                        tasks: [
+                            { text: "Tüm topolojiyi sadece CLI Scriptleri ile yapılandırma (Notepad kullanımı).", doc: "Best Practice", type: "TİP", url: "#" },
+                            { text: "Verilen kasıtlı hataları 15 dakika kuralıyla çözüp diğer soruya geçme simülasyonu.", doc: "Exam Strategy", type: "TİP", url: "#" },
+                            { text: "ProctorU ve Sınav odası gereksinimleri son kontrol.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
+                        ] 
+                    }
+                ]
+            }
+        ];
+
+        // Render Accordion with Links
+        function renderSchedule() {
+            const container = document.getElementById('accordionContainer');
+            let globalTaskIndex = 0;
+
+            detailedProgramData.forEach((phaseObj, phaseIndex) => {
+                const phaseId = `phase-${phaseIndex}`;
+                let weeksHtml = phaseObj.weeks.map(week => {
+                    let tasksHtml = week.tasks.map(task => {
+                        const taskId = `task-${globalTaskIndex++}`;
+                        const badgeColor = task.type === 'KB' ? 'bg-orange-500/20 text-orange-400 border-orange-500/30' : 
+                                         task.type === 'DOC' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' : 
+                                         'bg-purple-500/20 text-purple-400 border-purple-500/30';
+                        
+                        return `
+                            <li class="flex items-start gap-3 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors group border border-slate-700/50">
+                                <input type="checkbox" id="${taskId}" onchange="updateProgress()" class="mt-1 w-4 h-4 rounded text-emerald-500 focus:ring-emerald-500 bg-slate-900 border-slate-600 cursor-pointer">
+                                <label for="${taskId}" class="text-sm text-slate-300 cursor-pointer select-none group-hover:text-white flex-grow">${task.text}</label>
+                                ${task.url !== "#" ? 
+                                    `<a href="${task.url}" target="_blank" class="doc-link shrink-0 text-[10px] font-bold px-2 py-1 rounded border ${badgeColor} flex items-center gap-1 hover:brightness-125">
+                                        ${task.type} <i data-lucide="external-link" class="w-3 h-3"></i>
+                                    </a>` : 
+                                    `<span class="shrink-0 text-[10px] font-bold px-2 py-1 rounded border ${badgeColor}">${task.type}</span>`
+                                }
+                            </li>
+                        `;
+                    }).join('');
+
+                    return `
+                        <div class="ml-4 mb-5 border-l border-slate-700 pl-4 relative">
+                            <div class="absolute w-2 h-2 bg-slate-500 rounded-full -left-[4.5px] top-2 ring-4 ring-slate-800/80"></div>
+                            <h4 class="font-bold text-white mb-3 text-sm flex items-center gap-2">
+                                <span class="text-red-400">${week.week}:</span> ${week.title}
+                            </h4>
+                            <ul class="space-y-2">
+                                ${tasksHtml}
+                            </ul>
+                        </div>
+                    `;
+                }).join('');
+
+                const phaseHtml = `
+                    <div class="border border-slate-700 rounded-lg bg-slate-800 overflow-hidden shadow-lg">
+                        <button onclick="toggleAccordion('${phaseId}', this)" class="w-full text-left px-6 py-4 bg-slate-800 hover:bg-slate-700 flex justify-between items-center transition-colors focus:outline-none">
+                            <span class="font-bold text-base text-slate-200">${phaseObj.phase}</span>
+                            <i data-lucide="chevron-down" class="text-slate-400 transition-transform duration-300 transform accordion-icon"></i>
+                        </button>
+                        <div id="${phaseId}" class="accordion-content px-6 py-5 border-t border-slate-700 bg-slate-900/50">
+                            ${weeksHtml}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += phaseHtml;
+            });
+            
+            // İlk fazı açık bırak
+            setTimeout(() => {
+                const firstPhaseBtn = container.querySelector('button');
+                if(firstPhaseBtn) toggleAccordion('phase-0', firstPhaseBtn);
+                lucide.createIcons(); // Re-init icons for dynamic content
+            }, 50);
+        }
+
+        // Tab Logic
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-white', 'bg-slate-800', 'border-t', 'border-l', 'border-r', 'border-slate-700', 'z-10', '-mb-[1px]');
+                btn.classList.add('text-slate-400', 'hover:bg-slate-800/50', 'border-transparent');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.getAttribute('onclick').includes(tabId));
+            
+            activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800/50', 'border-transparent');
+            activeBtn.classList.add('active', 'text-white', 'bg-slate-800', 'border-t', 'border-l', 'border-r', 'border-slate-700', 'z-10', '-mb-[1px]');
+        }
+
+        // Accordion Logic
+        function toggleAccordion(id, btnElement) {
+            const content = document.getElementById(id);
+            const icon = btnElement.querySelector('.accordion-icon');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = "rotate(0deg)";
+            } else {
+                content.classList.add('open');
+                icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        // Expand/Collapse All
+        let allExpanded = false;
+        function expandAll() {
+            allExpanded = !allExpanded;
+            const contents = document.querySelectorAll('.accordion-content');
+            const icons = document.querySelectorAll('.accordion-icon');
+            
+            contents.forEach(content => {
+                if(allExpanded) content.classList.add('open');
+                else content.classList.remove('open');
+            });
+            
+            icons.forEach(icon => {
+                if(allExpanded) icon.style.transform = "rotate(180deg)";
+                else icon.style.transform = "rotate(0deg)";
+            });
+        }
+
+        // Progress Logic
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const total = checkboxes.length;
+            const checked = Array.from(checkboxes).filter(c => c.checked).length;
+            const percentage = total === 0 ? 0 : Math.round((checked / total) * 100);
+            
+            const progressBar = document.getElementById('mainProgress');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = percentage + '%';
+            progressText.innerText = percentage + '%';
+        }
+
+        // Initialize
+        window.onload = () => {
+            renderSchedule();
+            updateProgress();
+        };
+    </script>
+</body>
+</html>
