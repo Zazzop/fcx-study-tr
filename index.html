@@ -551,6 +551,7 @@ diag debug enable</pre>
 
         // UI Elements
         const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
         const userInfo = document.getElementById('user-info');
         const userName = document.getElementById('user-name');
         const userPhoto = document.getElementById('user-photo');
@@ -563,6 +564,7 @@ diag debug enable</pre>
         const profilePageName = document.getElementById('profile-page-name');
         const profilePageEmail = document.getElementById('profile-page-email');
         const profileLoginBtn = document.getElementById('profile-login-btn');
+        const profileLogoutBtn = document.getElementById('profile-logout-btn');
 
         // Auth State Observer
         onAuthStateChanged(auth, async (user) => {
@@ -571,19 +573,18 @@ diag debug enable</pre>
                 window.currentUser = user;
                 
                 // Top Nav Update
-                loginBtn.classList.add('hidden');
-                userInfo.classList.remove('hidden');
-                userName.textContent = user.displayName.split(' ')[0];
-                // Use a secure way to set src
-                userPhoto.setAttribute('src', user.photoURL || 'https://via.placeholder.com/150');
-                loginAlert.classList.add('hidden');
+                if(loginBtn) loginBtn.classList.add('hidden');
+                if(userInfo) userInfo.classList.remove('hidden');
+                if(userName) userName.textContent = user.displayName.split(' ')[0];
+                if(userPhoto) userPhoto.setAttribute('src', user.photoURL || 'https://via.placeholder.com/150');
+                if(loginAlert) loginAlert.classList.add('hidden');
                 
                 // Profile Page Update
-                profileLoggedOut.classList.add('hidden');
-                profileLoggedIn.classList.remove('hidden');
-                profilePageName.textContent = user.displayName;
-                profilePageEmail.textContent = user.email;
-                profilePageAvatar.setAttribute('src', user.photoURL || 'https://via.placeholder.com/150');
+                if(profileLoggedOut) profileLoggedOut.classList.add('hidden');
+                if(profileLoggedIn) profileLoggedIn.classList.remove('hidden');
+                if(profilePageName) profilePageName.textContent = user.displayName;
+                if(profilePageEmail) profilePageEmail.textContent = user.email;
+                if(profilePageAvatar) profilePageAvatar.setAttribute('src', user.photoURL || 'https://via.placeholder.com/150');
 
                 // Load user progress from Firestore
                 await loadUserProgress(user.uid);
@@ -592,13 +593,13 @@ diag debug enable</pre>
                 window.currentUser = null;
                 
                 // Top Nav Update
-                loginBtn.classList.remove('hidden');
-                userInfo.classList.add('hidden');
-                loginAlert.classList.remove('hidden');
+                if(loginBtn) loginBtn.classList.remove('hidden');
+                if(userInfo) userInfo.classList.add('hidden');
+                if(loginAlert) loginAlert.classList.remove('hidden');
                 
                 // Profile Page Update
-                profileLoggedOut.classList.remove('hidden');
-                profileLoggedIn.classList.add('hidden');
+                if(profileLoggedOut) profileLoggedOut.classList.remove('hidden');
+                if(profileLoggedIn) profileLoggedIn.classList.add('hidden');
 
                 // Clear checkboxes if logged out
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -606,34 +607,46 @@ diag debug enable</pre>
             }
         });
 
-        // Global Login Handler
-        window.doLogin = () => {
+        // Global Login Handler with better error handling
+        const doLogin = () => {
             signInWithPopup(auth, provider).catch((error) => {
-                console.error("Login failed:", error);
-                alert("Giriş yapılamadı: " + error.message);
+                // Specifically check for popup closed by user to avoid annoying alerts
+                if (error.code === 'auth/popup-closed-by-user') {
+                    console.log("Kullanıcı giriş penceresini kapattı. İşlem iptal edildi.");
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    console.warn("Lütfen bu domaini Firebase konsolunda Authorized Domains bölümüne ekleyin.");
+                    alert("Güvenlik hatası: Bu alan adı henüz yetkilendirilmemiş.");
+                } else {
+                    console.error("Login failed:", error);
+                    alert("Giriş işlemi sırasında bir hata oluştu.");
+                }
             });
         };
 
-        // Attach login to profile login button safely
-        if(profileLoginBtn) {
-            profileLoginBtn.addEventListener('click', window.doLogin);
-        }
+        // Attach Login Handlers
+        if(loginBtn) loginBtn.addEventListener('click', doLogin);
+        if(profileLoginBtn) profileLoginBtn.addEventListener('click', doLogin);
 
-        // Global Logout Handler (Fixed)
-        window.doLogout = () => {
+        // Global Logout Handler
+        const doLogout = (e) => {
+            if(e) e.stopPropagation();
             signOut(auth).then(() => {
                 // Logout successful. Redirect user visually to main schedule tab.
-                window.showTab('schedule');
+                if(window.showTab) window.showTab('schedule');
             }).catch((error) => {
                 console.error("Logout failed:", error);
             });
         };
 
+        // Attach Logout Handlers
+        if(logoutBtn) logoutBtn.addEventListener('click', doLogout);
+        if(profileLogoutBtn) profileLogoutBtn.addEventListener('click', doLogout);
+
         // Save Progress to Firestore
         window.saveProgressToDB = async () => {
             if (!window.currentUser) return; // Don't save if not logged in
 
-            const states = window.getCheckboxStates();
+            const states = window.getCheckboxStates ? window.getCheckboxStates() : {};
             try {
                 await setDoc(doc(db, "userProgress", window.currentUser.uid), {
                     progress: states,
@@ -841,7 +854,7 @@ diag debug enable</pre>
                     { week: "Hafta 23-24", title: "Final Hız Testi (Sınav Hazırlığı)", tasks: [
                         { text: "Tüm topolojiyi sadece CLI Scriptleri ile yapılandırma (Notepad kullanımı).", doc: "Best Practice", type: "TİP", url: "#" },
                         { text: "Verilen kasıtlı hataları 15 dakika kuralıyla çözüp diğer soruya geçme simülasyonu.", doc: "Exam Strategy", type: "TİP", url: "#" },
-                        { text: "ProctorU ve Sınav odası gereksinimleri son kontrol.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
+                        { text: "Final check of ProctorU and Exam room requirements.", doc: "Pearson VUE", type: "DOC", url: "https://training.fortinet.com/" }
                     ]}
                 ]
             }
